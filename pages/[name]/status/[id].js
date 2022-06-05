@@ -1,5 +1,7 @@
+import NewReply from "components/NewReply";
 import Tweet from "components/Tweet";
-import { getTweet } from "lib/data";
+import Tweets from "components/Tweets";
+import { getReplies, getTweet } from "lib/data";
 import prisma from "lib/prisma";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/router";
@@ -8,17 +10,24 @@ export async function getServerSideProps({ params }) {
   let tweet = await getTweet(params.id, prisma);
   tweet = JSON.parse(JSON.stringify(tweet));
 
+  let replies = await getReplies(params.id, prisma);
+  replies = JSON.parse(JSON.stringify(replies));
+
   return {
     props: {
       tweet,
+      replies,
     },
   };
 }
 
-export default function SingleTweet({ tweet }) {
+export default function SingleTweet({ tweet, replies }) {
   const { data: session, loading } = useSession();
   const router = useRouter();
-  console.log("session [name]/status", session);
+  // console.log("session [name]/status", session);
+  if (typeof window !== "undefined" && tweet.parent) {
+    router.push(`/${tweet.author.name}/status/${tweet.parent}`);
+  }
   return (
     <div>
       <Tweet tweet={tweet} />
@@ -50,6 +59,8 @@ export default function SingleTweet({ tweet }) {
           </a>
         </div>
       )}
+      <NewReply tweet={tweet} />
+      <Tweets tweets={replies} nolink={true} />
     </div>
   );
 }
