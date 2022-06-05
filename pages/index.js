@@ -32,14 +32,14 @@ export default function Home({ tweets }) {
   return (
     <div className="mt-10">
       <Tweets tweets={tweets} />
-      <p className="text-center p-4 border m-4">
+      <div className="text-center p-4 border m-4">
         <h2 className="mb-10">Join the conversation!</h2>
         <Link href="/api/auth/signin">
           <a className="border px-8 py-2 mt-5 font-bold rounded-full color-accent-contrast bg-color-accent hover:bg-color-accent-hover-darker">
             login
           </a>
         </Link>
-      </p>
+      </div>
     </div>
     // <div>
     //   <Link href="/api/auth/signin">
